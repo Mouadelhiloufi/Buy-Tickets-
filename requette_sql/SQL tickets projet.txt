@@ -1,0 +1,107 @@
+requetes sql de tickets projet
+
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(30),
+    prenom VARCHAR(30),
+    email VARCHAR(100),
+    phone VARCHAR(20),
+    pwd VARCHAR(255) ,
+    role ENUM('acheteur','organisateur','admin') ,
+    actif BOOLEAN DEFAULT 1
+)
+
+
+CREATE TABLE equipe (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(50) ,
+    logo VARCHAR(700)
+)
+
+
+
+CREATE TABLE events (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    date_match DATE ,
+    heure_match TIME ,
+    statut ENUM('en_attente','valide','refuse') DEFAULT 'en_attente',
+    lieu VARCHAR(50),
+    duree INT DEFAULT 90,
+    nb_place INT,
+    equipe1_id INT ,
+    equipe2_id INT ,
+    organisateur_id INT ,
+
+    FOREIGN KEY (organisateur_id) REFERENCES users(id),
+    FOREIGN KEY (equipe1_id) REFERENCES equipe(id),
+    FOREIGN KEY (equipe2_id) REFERENCES equipe(id)
+)
+
+
+
+
+
+
+CREATE TABLE categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    type VARCHAR(50) ,
+    prix int ,
+    match_id INT,
+
+    FOREIGN KEY (match_id) REFERENCES events(id)
+    
+)
+
+
+
+
+
+CREATE TABLE reservations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    reserved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    prix_total DECIMAL(10,2),
+    acheteur_id INT ,
+    match_id INT ,
+
+    FOREIGN KEY (acheteur_id) REFERENCES users(id),
+    FOREIGN KEY (match_id) REFERENCES events(id)
+)
+
+
+
+
+CREATE TABLE billets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    reservation_id INT ,
+    match_id INT ,
+    categorie_id INT ,
+    numero_place INT,
+    prix DECIMAL(10,2),
+
+    FOREIGN KEY (reservation_id) REFERENCES reservations(id),
+
+    FOREIGN KEY (match_id) REFERENCES events(id),
+    FOREIGN KEY (categorie_id) REFERENCES categories(id)
+)
+
+
+
+
+
+
+
+CREATE TABLE commentaires (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    acheteur_id INT ,
+    match_id INT ,
+    contenu TEXT,
+    date_commentaire TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (acheteur_id) REFERENCES users(id),
+    FOREIGN KEY (match_id) REFERENCES events(id)
+   
+)
+
+
+
