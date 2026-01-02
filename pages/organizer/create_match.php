@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organisateur - Créer un Match | FootPass</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .stadium-gradient {
+            background: linear-gradient(135deg, #111827 0%, #064e3b 100%);
+        }
+        /* Style pour améliorer l'apparence des options sur certains navigateurs */
+        select option {
+            background-color: white;
+            color: #1f2937;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen pb-12">
+
+    <div class="stadium-gradient text-white py-8 px-6 mb-10 shadow-lg">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-black italic tracking-tighter uppercase">Nouvel Événement</h1>
+                <p class="text-green-400 text-xs font-bold uppercase tracking-widest mt-1">Configuration officielle du match</p>
+            </div>
+            <div class="text-right">
+                <span class="block text-xs opacity-60 uppercase font-bold">ID Organisateur</span>
+                <span class="text-xl font-mono font-bold text-green-400">#<?php echo $_SESSION['user_id'] ?? '007'; ?></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-5xl mx-auto px-4">
+        <form action="process_match.php" method="POST" class="space-y-8">
+            
+            <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="bg-green-100 text-green-700 w-10 h-10 rounded-full flex items-center justify-center font-bold">1</div>
+                    <h2 class="text-xl font-black uppercase tracking-tight text-gray-800">Affiche du Match</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                    <div class="space-y-2">
+                        <label class="text-xs font-black uppercase text-gray-400 ml-1">Équipe Domicile</label>
+                        <select name="equipe1_id" class="w-full bg-gray-50 border-2 border-gray-100 p-4 rounded-2xl focus:border-green-500 outline-none transition font-bold" required>
+                            <option value="">Sélectionner le club local...</option>
+                            <option value="1">Raja CA (Casablanca)</option>
+                            <option value="2">Wydad AC (Casablanca)</option>
+                            <option value="3">AS FAR (Rabat)</option>
+                            <option value="4">RS Berkane (Berkane)</option>
+                            <option value="5">Fath US (Rabat)</option>
+                            <option value="6">Union Touarga (Rabat)</option>
+                            <option value="7">Olympique Safi (Safi)</option>
+                            <option value="8">MAS Fès (Fès)</option>
+                            <option value="9">Hassania Agadir (Agadir)</option>
+                            <option value="10">Ittihad Tanger (Tanger)</option>
+                            <option value="11">MAT Tétouan (Tétouan)</option>
+                            <option value="12">JS Soualem (Had Soualem)</option>
+                            <option value="13">RCA Zemamra (Zemamra)</option>
+                            <option value="14">SCC Mohammédia (Mohammédia)</option>
+                            <option value="15">CODM Meknès (Meknès)</option>
+                            <option value="16">Difaâ El Jadida (El Jadida)</option>
+                        </select>
+                    </div>
+
+                    <div class="text-center">
+                        <span class="bg-gray-800 text-white w-12 h-12 flex items-center justify-center rounded-full mx-auto font-black italic shadow-xl">VS</span>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-xs font-black uppercase text-gray-400 ml-1">Équipe Extérieur</label>
+                        <select name="equipe2_id" class="w-full bg-gray-50 border-2 border-gray-100 p-4 rounded-2xl focus:border-green-500 outline-none transition font-bold" required>
+                            <option value="">Sélectionner l'adversaire...</option>
+                            <option value="1">Raja CA (Casablanca)</option>
+                            <option value="2">Wydad AC (Casablanca)</option>
+                            <option value="3">AS FAR (Rabat)</option>
+                            <option value="4">RS Berkane (Berkane)</option>
+                            <option value="5">Fath US (Rabat)</option>
+                            <option value="6">Union Touarga (Rabat)</option>
+                            <option value="7">Olympique Safi (Safi)</option>
+                            <option value="8">MAS Fès (Fès)</option>
+                            <option value="9">Hassania Agadir (Agadir)</option>
+                            <option value="10">Ittihad Tanger (Tanger)</option>
+                            <option value="11">MAT Tétouan (Tétouan)</option>
+                            <option value="12">JS Soualem (Had Soualem)</option>
+                            <option value="13">RCA Zemamra (Zemamra)</option>
+                            <option value="14">SCC Mohammédia (Mohammédia)</option>
+                            <option value="15">CODM Meknès (Meknès)</option>
+                            <option value="16">Difaâ El Jadida (El Jadida)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="bg-blue-100 text-blue-700 w-10 h-10 rounded-full flex items-center justify-center font-bold">2</div>
+                    <h2 class="text-xl font-black uppercase tracking-tight text-gray-800">Date & Lieu</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-xs font-black uppercase text-gray-400 ml-1">Stade / Lieu</label>
+                        <input type="text" name="lieu" placeholder="Stade Mohammed V" class="w-full bg-gray-50 border-2 border-gray-100 p-4 rounded-2xl focus:border-blue-500 outline-none transition" required>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-black uppercase text-gray-400 ml-1">Date du Match</label>
+                        <input type="date" name="date_match" class="w-full bg-gray-50 border-2 border-gray-100 p-4 rounded-2xl focus:border-blue-500 outline-none transition" required>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-black uppercase text-gray-400 ml-1">Heure du Coup d'envoi</label>
+                        <input type="time" name="heure_match" class="w-full bg-gray-50 border-2 border-gray-100 p-4 rounded-2xl focus:border-blue-500 outline-none transition" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="bg-amber-100 text-amber-700 w-10 h-10 rounded-full flex items-center justify-center font-bold">3</div>
+                    <h2 class="text-xl font-black uppercase tracking-tight text-gray-800">Gestion des Places</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="p-6 rounded-3xl bg-amber-50 border-2 border-amber-100">
+                        <h4 class="font-black uppercase text-amber-800 text-sm mb-4 flex items-center gap-2">
+                            <i class="fas fa-crown"></i> Catégorie VIP
+                        </h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold uppercase text-amber-600">Prix (DH)</label>
+                                <input type="number" name="prix_vip" placeholder="500" class="w-full p-3 rounded-xl border-none outline-none focus:ring-2 focus:ring-amber-500">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold uppercase text-amber-600">Nombre de places</label>
+                                <input type="number" name="nb_place_vip" placeholder="100" class="w-full p-3 rounded-xl border-none outline-none focus:ring-2 focus:ring-amber-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-6 rounded-3xl bg-gray-50 border-2 border-gray-100">
+                        <h4 class="font-black uppercase text-gray-700 text-sm mb-4 flex items-center gap-2">
+                            <i class="fas fa-ticket-alt"></i> Catégorie Standard
+                        </h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold uppercase text-gray-500">Prix (DH)</label>
+                                <input type="number" name="prix_normal" placeholder="50" class="w-full p-3 rounded-xl border-none outline-none focus:ring-2 focus:ring-gray-400">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold uppercase text-gray-500">Nombre de places</label>
+                                <input type="number" name="nb_place_normal" placeholder="1000" class="w-full p-3 rounded-xl border-none outline-none focus:ring-2 focus:ring-gray-400">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 p-4 bg-red-50 rounded-2xl border border-red-100">
+                    <p class="text-xs text-red-600 font-medium italic">
+                        <i class="fas fa-info-circle mr-1"></i> 
+                        La capacité totale du match sera calculée automatiquement selon la somme des places par catégorie.
+                    </p>
+                </div>
+            </div>
+
+            <button type="submit" class="w-full stadium-gradient text-white py-6 rounded-[2rem] font-black uppercase tracking-[0.2em] shadow-2xl hover:scale-[1.02] transition active:scale-95">
+                Soumettre la demande d'événement
+            </button>
+
+        </form>
+    </div>
+
+</body>
+</html>
