@@ -1,3 +1,9 @@
+<?php
+    require_once "../../classes/User.php";
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>

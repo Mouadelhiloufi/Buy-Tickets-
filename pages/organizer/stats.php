@@ -5,18 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Statistiques - Organisateur</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="bg-gray-50 min-h-screen">
 
     <div class="flex">
-        <aside class="w-64 bg-green-900 min-h-screen text-white p-6 hidden md:block">
-            <div class="text-2xl font-black mb-10 italic">FOOTPASS</div>
-            <nav class="space-y-4">
-                
-                <a href="#" class="block py-2.5 px-4 rounded bg-green-700 font-bold">Statistiques</a>
-                <a href="create_match.php" class="block py-2.5 px-4 rounded transition hover:bg-green-800">Creé Événements</a>
-            </nav>
+        <aside class="w-64 bg-green-900 min-h-screen text-white p-6 hidden md:flex flex-col justify-between">
+            <div>
+                <div class="text-2xl font-black mb-10 italic">FOOTPASS</div>
+                <nav class="space-y-4">
+                    <a href="#" class="block py-2.5 px-4 rounded bg-green-700 font-bold">Statistiques</a>
+                    <a href="create_match.php" class="block py-2.5 px-4 rounded transition hover:bg-green-800">Creé Événements</a>
+                </nav>
+            </div>
+
+            <div class="border-t border-green-800 pt-6">
+                <a href="../../auth/logout.php" class="flex items-center gap-3 py-2.5 px-4 rounded transition hover:bg-red-600 text-green-300 hover:text-white font-bold uppercase text-xs tracking-widest">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Se déconnecter
+                </a>
+            </div>
         </aside>
 
         <main class="flex-1 p-8">
