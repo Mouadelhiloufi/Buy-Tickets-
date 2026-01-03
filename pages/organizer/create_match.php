@@ -1,6 +1,37 @@
 <?php
-    require_once "../../classes/User.php";
+    
+  require_once __DIR__ . '/../../classes/Organisateur.php';
 
+
+  $user=Organisateur::findById($_SESSION['user_id']);
+  $organizer=new Organisateur($user['nom'],$user['prenom'],$user['email'],$user['phone']
+  ,$user['role'],$user['actif'],$user['pwd']);
+
+
+
+  if($_SERVER['REQUEST_METHOD']=="POST"){
+
+        $nb_place_V=(int) $_POST['nb_place_vip'];
+        $nb_place_N=(int) $_POST['nb_place_normal'];
+        $nb_places=$nb_place_V+$nb_place_N;
+
+    $equipe1=$_POST['equipe1'];
+    $equipe2=$_POST['equipe2'];
+    $lieu=$_POST['lieu'];
+    $date_match=$_POST['date_match'];
+    $heure_match=$_POST['heure_match'];
+    $prix_V=$_POST['prix_vip'];
+    $prix=$_POST['prix_normal'];
+    $nb_places=$nb_place_V+$nb_place_N;
+    $duree="90";
+    $statut="en_attente";
+    $organisateur_id=$_SESSION['user_id'];
+    $type_V="vip";
+    $type="normal";
+
+    $organizer->cree_event($equipe1,$equipe2,$date_match,$heure_match,$lieu,$duree,
+    $nb_places,$statut,$organisateur_id,$type_V,$prix_V,$nb_place_V,$type,$prix,$nb_place_N);
+  }
 
 ?>
 
@@ -16,7 +47,6 @@
         .stadium-gradient {
             background: linear-gradient(135deg, #111827 0%, #064e3b 100%);
         }
-        /* Style pour améliorer l'apparence des options sur certains navigateurs */
         select option {
             background-color: white;
             color: #1f2937;
@@ -27,20 +57,27 @@
 <body class="bg-gray-100 min-h-screen pb-12">
 
     <div class="stadium-gradient text-white py-8 px-6 mb-10 shadow-lg">
-        <div class="max-w-5xl mx-auto flex justify-between items-center">
-            <div>
-                <h1 class="text-3xl font-black italic tracking-tighter uppercase">Nouvel Événement</h1>
-                <p class="text-green-400 text-xs font-bold uppercase tracking-widest mt-1">Configuration officielle du match</p>
-            </div>
-            <div class="text-right">
-                <span class="block text-xs opacity-60 uppercase font-bold">ID Organisateur</span>
-                <span class="text-xl font-mono font-bold text-green-400">#<?php echo $_SESSION['user_id'] ?? '007'; ?></span>
+        <div class="max-w-5xl mx-auto">
+            <a href="stats.php" class="inline-flex items-center gap-2 text-green-400 hover:text-white transition-colors mb-6 group">
+                <i class="fas fa-arrow-left transition-transform group-hover:-translate-x-1"></i>
+                <span class="text-xs font-black uppercase tracking-widest">Retour au Dashboard</span>
+            </a>
+
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-black italic tracking-tighter uppercase">Nouvel Événement</h1>
+                    <p class="text-green-400 text-xs font-bold uppercase tracking-widest mt-1">Configuration officielle du match</p>
+                </div>
+                <div class="text-right">
+                    <span class="block text-xs opacity-60 uppercase font-bold">ID Organisateur</span>
+                    <span class="text-xl font-mono font-bold text-green-400">#<?php echo $_SESSION['user_id'] ?? '007'; ?></span>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="max-w-5xl mx-auto px-4">
-        <form action="process_match.php" method="POST" class="space-y-8">
+        <form action="" method="POST" class="space-y-8">
             
             <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
                 <div class="flex items-center gap-3 mb-8">
@@ -51,24 +88,24 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
                     <div class="space-y-2">
                         <label class="text-xs font-black uppercase text-gray-400 ml-1">Équipe Domicile</label>
-                        <select name="equipe1_id" class="w-full bg-gray-50 border-2 border-gray-100 p-4 rounded-2xl focus:border-green-500 outline-none transition font-bold" required>
-                            <option value="">Sélectionner le club local...</option>
-                            <option value="1">Raja CA (Casablanca)</option>
-                            <option value="2">Wydad AC (Casablanca)</option>
-                            <option value="3">AS FAR (Rabat)</option>
-                            <option value="4">RS Berkane (Berkane)</option>
-                            <option value="5">Fath US (Rabat)</option>
-                            <option value="6">Union Touarga (Rabat)</option>
-                            <option value="7">Olympique Safi (Safi)</option>
-                            <option value="8">MAS Fès (Fès)</option>
-                            <option value="9">Hassania Agadir (Agadir)</option>
-                            <option value="10">Ittihad Tanger (Tanger)</option>
-                            <option value="11">MAT Tétouan (Tétouan)</option>
-                            <option value="12">JS Soualem (Had Soualem)</option>
-                            <option value="13">RCA Zemamra (Zemamra)</option>
-                            <option value="14">SCC Mohammédia (Mohammédia)</option>
-                            <option value="15">CODM Meknès (Meknès)</option>
-                            <option value="16">Difaâ El Jadida (El Jadida)</option>
+                        <select name="equipe1" class="w-full bg-gray-50 border-2 border-gray-100 p-4 rounded-2xl focus:border-green-500 outline-none transition font-bold" required>
+                            <option value="">Sélectionner l'adversaire...</option>
+                            <option value="Raja CA (Casablanca)">Raja CA (Casablanca)</option>
+                            <option value="Wydad AC (Casablanca)">Wydad AC (Casablanca)</option>
+                            <option value="AS FAR (Rabat)">AS FAR (Rabat)</option>
+                            <option value="RS Berkane (Berkane)">RS Berkane (Berkane)</option>
+                            <option value="Fath US (Rabat)">Fath US (Rabat)</option>
+                            <option value="Union Touarga (Rabat)">Union Touarga (Rabat)</option>
+                            <option value="Olympique Safi (Safi)">Olympique Safi (Safi)</option>
+                            <option value="MAS Fès (Fès)">MAS Fès (Fès)</option>
+                            <option value="Hassania Agadir (Agadir)">Hassania Agadir (Agadir)</option>
+                            <option value="Ittihad Tanger (Tanger)">Ittihad Tanger (Tanger)</option>
+                            <option value="MAT Tétouan (Tétouan)">MAT Tétouan (Tétouan)</option>
+                            <option value="JS Soualem (Had Soualem)">JS Soualem (Had Soualem)</option>
+                            <option value="RCA Zemamra (Zemamra)">RCA Zemamra (Zemamra)</option>
+                            <option value="SCC Mohammédia (Mohammédia)">SCC Mohammédia (Mohammédia)</option>
+                            <option value="CODM Meknès (Meknès)">CODM Meknès (Meknès)</option>
+                            <option value="Difaâ El Jadida (El Jadida)">Difaâ El Jadida (El Jadida)</option>
                         </select>
                     </div>
 
@@ -78,24 +115,24 @@
 
                     <div class="space-y-2">
                         <label class="text-xs font-black uppercase text-gray-400 ml-1">Équipe Extérieur</label>
-                        <select name="equipe2_id" class="w-full bg-gray-50 border-2 border-gray-100 p-4 rounded-2xl focus:border-green-500 outline-none transition font-bold" required>
+                        <select name="equipe2" class="w-full bg-gray-50 border-2 border-gray-100 p-4 rounded-2xl focus:border-green-500 outline-none transition font-bold" required>
                             <option value="">Sélectionner l'adversaire...</option>
-                            <option value="1">Raja CA (Casablanca)</option>
-                            <option value="2">Wydad AC (Casablanca)</option>
-                            <option value="3">AS FAR (Rabat)</option>
-                            <option value="4">RS Berkane (Berkane)</option>
-                            <option value="5">Fath US (Rabat)</option>
-                            <option value="6">Union Touarga (Rabat)</option>
-                            <option value="7">Olympique Safi (Safi)</option>
-                            <option value="8">MAS Fès (Fès)</option>
-                            <option value="9">Hassania Agadir (Agadir)</option>
-                            <option value="10">Ittihad Tanger (Tanger)</option>
-                            <option value="11">MAT Tétouan (Tétouan)</option>
-                            <option value="12">JS Soualem (Had Soualem)</option>
-                            <option value="13">RCA Zemamra (Zemamra)</option>
-                            <option value="14">SCC Mohammédia (Mohammédia)</option>
-                            <option value="15">CODM Meknès (Meknès)</option>
-                            <option value="16">Difaâ El Jadida (El Jadida)</option>
+                            <option value="Raja CA (Casablanca)">Raja CA (Casablanca)</option>
+                            <option value="Wydad AC (Casablanca)">Wydad AC (Casablanca)</option>
+                            <option value="AS FAR (Rabat)">AS FAR (Rabat)</option>
+                            <option value="RS Berkane (Berkane)">RS Berkane (Berkane)</option>
+                            <option value="Fath US (Rabat)">Fath US (Rabat)</option>
+                            <option value="Union Touarga (Rabat)">Union Touarga (Rabat)</option>
+                            <option value="Olympique Safi (Safi)">Olympique Safi (Safi)</option>
+                            <option value="MAS Fès (Fès)">MAS Fès (Fès)</option>
+                            <option value="Hassania Agadir (Agadir)">Hassania Agadir (Agadir)</option>
+                            <option value="Ittihad Tanger (Tanger)">Ittihad Tanger (Tanger)</option>
+                            <option value="MAT Tétouan (Tétouan)">MAT Tétouan (Tétouan)</option>
+                            <option value="JS Soualem (Had Soualem)">JS Soualem (Had Soualem)</option>
+                            <option value="RCA Zemamra (Zemamra)">RCA Zemamra (Zemamra)</option>
+                            <option value="SCC Mohammédia (Mohammédia)">SCC Mohammédia (Mohammédia)</option>
+                            <option value="CODM Meknès (Meknès)">CODM Meknès (Meknès)</option>
+                            <option value="Difaâ El Jadida (El Jadida)">Difaâ El Jadida (El Jadida)</option>
                         </select>
                     </div>
                 </div>

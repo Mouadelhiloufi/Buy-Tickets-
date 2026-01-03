@@ -1,3 +1,16 @@
+<?php
+    
+    require_once __DIR__ . '/../../classes/Organisateur.php';
+    
+    // Récupération des statistiques réelles
+    $stats = Organisateur::Consult_statistique($_SESSION['user_id']);
+    
+    // On extrait pour plus de lisibilité (basé sur ta fonction Consult_statistique)
+    $totalBillets = $stats['total_billets'] ;
+    $totalEvents  = $stats['total_events'];
+    $topMatch     = $stats['max_vendu'] ;
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -15,8 +28,17 @@
             <div>
                 <div class="text-2xl font-black mb-10 italic">FOOTPASS</div>
                 <nav class="space-y-4">
-                    <a href="#" class="block py-2.5 px-4 rounded bg-green-700 font-bold">Statistiques</a>
-                    <a href="create_match.php" class="block py-2.5 px-4 rounded transition hover:bg-green-800">Creé Événements</a>
+                    <a href="#" class="block py-2.5 px-4 rounded bg-green-700 font-bold">
+                        <i class="fas fa-chart-line mr-2"></i> Statistiques</a>
+                     <a href="create_match.php" class="block py-2.5 px-4 rounded transition hover:bg-green-800 italic">
+                        <i class="fas fa-plus-circle mr-2"></i> Créer Événements
+                    </a>
+                    <a href="view_comments.php" class="block py-2.5 px-4 rounded transition hover:bg-green-800">
+                    <i class="fas fa-comments mr-2 text-green-400"></i> Commentaires
+                    </a>
+                    <a href="edit_profile.php" class="block py-2.5 px-4 rounded transition hover:bg-green-800">
+                    <i class="fas fa-user-edit mr-2"></i> Mon Profil
+                    </a>
                 </nav>
             </div>
 
@@ -37,23 +59,21 @@
                 <div class="bg-white p-2 rounded-xl shadow-sm border border-gray-100">
                     <span class="text-sm font-bold text-gray-400 px-4">Période :</span>
                     <select class="outline-none bg-transparent font-bold text-green-700 pr-4">
-                        <option>7 derniers jours</option>
-                        <option>30 derniers jours</option>
+                        <option>Global</option>
                         <option>Cette année</option>
                     </select>
                 </div>
             </header>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div class="bg-white p-6 rounded-[2rem] shadow-sm border-b-4 border-green-600">
                     <div class="flex items-center justify-between mb-4">
                         <div class="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center text-green-700 text-xl">
-                            <i class="fas fa-users"></i>
+                            <i class="fas fa-ticket-alt"></i>
                         </div>
-                        <span class="text-green-500 font-bold text-sm">+12%</span>
                     </div>
-                    <p class="text-gray-400 text-xs font-black uppercase tracking-widest">Total Participants</p>
-                    <h3 class="text-3xl font-black text-gray-800">1,284</h3>
+                    <p class="text-gray-400 text-xs font-black uppercase tracking-widest">Total Billets Vendus</p>
+                    <h3 class="text-3xl font-black text-gray-800"><?php echo $totalBillets; ?></h3>
                 </div>
 
                 <div class="bg-white p-6 rounded-[2rem] shadow-sm border-b-4 border-blue-600">
@@ -61,32 +81,21 @@
                         <div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-700 text-xl">
                             <i class="fas fa-calendar-check"></i>
                         </div>
-                        <span class="text-blue-500 font-bold text-sm">Active</span>
                     </div>
-                    <p class="text-gray-400 text-xs font-black uppercase tracking-widest">Événements</p>
-                    <h3 class="text-3xl font-black text-gray-800">8</h3>
-                </div>
-
-                <div class="bg-white p-6 rounded-[2rem] shadow-sm border-b-4 border-yellow-600">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 bg-yellow-100 rounded-2xl flex items-center justify-center text-yellow-700 text-xl">
-                            <i class="fas fa-ticket-alt"></i>
-                        </div>
-                        <span class="text-red-500 font-bold text-sm">-3%</span>
-                    </div>
-                    <p class="text-gray-400 text-xs font-black uppercase tracking-widest">Billets Vendus</p>
-                    <h3 class="text-3xl font-black text-gray-800">850</h3>
+                    <p class="text-gray-400 text-xs font-black uppercase tracking-widest">Matchs Organisés</p>
+                    <h3 class="text-3xl font-black text-gray-800"><?php echo $totalEvents; ?></h3>
                 </div>
 
                 <div class="bg-white p-6 rounded-[2rem] shadow-sm border-b-4 border-purple-600">
                     <div class="flex items-center justify-between mb-4">
                         <div class="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-700 text-xl">
-                            <i class="fas fa-euro-sign"></i>
+                            <i class="fas fa-star"></i>
                         </div>
-                        <span class="text-green-500 font-bold text-sm">+25%</span>
                     </div>
-                    <p class="text-gray-400 text-xs font-black uppercase tracking-widest">Chiffre d'Affaires</p>
-                    <h3 class="text-3xl font-black text-gray-800">12,450 €</h3>
+                    <p class="text-gray-400 text-xs font-black uppercase tracking-widest">Ventes Top Match</p>
+                    <h3 class="text-3xl font-black text-gray-800">
+                        <?php echo $topMatch ? $topMatch['total_reservations'] : '0'; ?>
+                    </h3>
                 </div>
             </div>
 
@@ -97,32 +106,30 @@
                 </div>
 
                 <div class="bg-white p-8 rounded-[2.5rem] shadow-sm">
-                    <h3 class="font-black text-gray-800 uppercase text-sm mb-6 tracking-widest">Top Événements</h3>
+                    <h3 class="font-black text-gray-800 uppercase text-sm mb-6 tracking-widest">Match le plus populaire</h3>
                     <div class="space-y-6">
+                        <?php if($topMatch): ?>
                         <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-gray-200 rounded-xl overflow-hidden">
-                                <img src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=100" alt="match">
+                            <div class="w-16 h-16 bg-green-900 rounded-2xl flex items-center justify-center text-white font-bold text-center text-[10px] p-2">
+                                TOP MATCH
                             </div>
                             <div class="flex-1">
-                                <h4 class="font-bold text-sm text-gray-800">Match Amical - Wydad vs Raja</h4>
+                                <h4 class="font-bold text-sm text-gray-800 uppercase">
+                                    <?php echo htmlspecialchars($topMatch['equipe1'] . " vs " . $topMatch['equipe2']); ?>
+                                </h4>
                                 <div class="w-full bg-gray-100 h-2 rounded-full mt-2">
-                                    <div class="bg-green-600 h-2 rounded-full" style="width: 85%"></div>
+                                    <div class="bg-green-600 h-2 rounded-full" style="width: 100%"></div>
                                 </div>
+                                <p class="text-[10px] text-gray-400 mt-2 font-bold uppercase">Succès maximum sur cet événement</p>
                             </div>
-                            <span class="font-black text-green-700">85%</span>
+                            <div class="text-right">
+                                <span class="font-black text-green-700"><?php echo $topMatch['total_reservations']; ?></span>
+                                <p class="text-[8px] uppercase font-bold text-gray-400">Billets</p>
+                            </div>
                         </div>
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-gray-200 rounded-xl overflow-hidden">
-                                <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=100" alt="match">
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-bold text-sm text-gray-800">Tournoi de Quartier - Finale</h4>
-                                <div class="w-full bg-gray-100 h-2 rounded-full mt-2">
-                                    <div class="bg-blue-600 h-2 rounded-full" style="width: 62%"></div>
-                                </div>
-                            </div>
-                            <span class="font-black text-blue-700">62%</span>
-                        </div>
+                        <?php else: ?>
+                            <p class="text-gray-400 italic text-sm">Aucun billet vendu pour le moment.</p>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -130,15 +137,14 @@
     </div>
 
     <script>
-        // Configuration du graphique Chart.js
         const ctx = document.getElementById('participationChart').getContext('2d');
         new Chart(ctx, {
             type: 'line',
             data: {
                 labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'],
                 datasets: [{
-                    label: 'Inscriptions',
-                    data: [65, 59, 80, 81, 56, 95],
+                    label: 'Ventes',
+                    data: [12, 19, 3, 5, 2, 3], // Données à rendre dynamiques plus tard
                     borderColor: '#15803d',
                     backgroundColor: 'rgba(21, 128, 61, 0.1)',
                     fill: true,
