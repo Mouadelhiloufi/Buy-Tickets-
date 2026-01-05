@@ -154,7 +154,19 @@
 
 
 
-            
+            static function consult_comments($id){
+                $db=Database::getInstance()->getConnection();
+
+                $sql_prepare="select U.nom,U.prenom,E.equipe1,E.equipe2,C.contenu,C.note,C.date_commentaire
+                from users U inner join commentaires C on C.acheteur_id=U.id 
+                inner join events E on E.id=C.match_id where E.organisateur_id=?";
+
+                $sql=$db->prepare($sql_prepare);
+                $sql->execute([
+                    $id
+                ]);
+                return $sql->fetchAll(PDO::FETCH_ASSOC);
+            }
 
 
 

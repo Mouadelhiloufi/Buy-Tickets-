@@ -7,6 +7,8 @@
   $organizer=new Organisateur($user['nom'],$user['prenom'],$user['email'],$user['phone']
   ,$user['role'],$user['actif'],$user['pwd']);
 
+  
+
 
 
   if($_SERVER['REQUEST_METHOD']=="POST"){

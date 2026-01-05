@@ -28,13 +28,12 @@
             <div>
                 <div class="text-2xl font-black mb-10 italic">FOOTPASS</div>
                 <nav class="space-y-4">
-                    <a href="#" class="block py-2.5 px-4 rounded bg-green-700 font-bold">
-                        <i class="fas fa-chart-line mr-2"></i> Statistiques</a>
+                    <a href="#" class="block py-2.5 px-4 rounded bg-green-700 font-bold"><i class="fas fa-chart-line mr-2"></i> Statistiques</a>
                      <a href="create_match.php" class="block py-2.5 px-4 rounded transition hover:bg-green-800 italic">
                         <i class="fas fa-plus-circle mr-2"></i> Créer Événements
                     </a>
                     <a href="view_comments.php" class="block py-2.5 px-4 rounded transition hover:bg-green-800">
-                    <i class="fas fa-comments mr-2 text-green-400"></i> Commentaires
+                    <i class="fas fa-comments mr-2 "></i> Commentaires
                     </a>
                     <a href="edit_profile.php" class="block py-2.5 px-4 rounded transition hover:bg-green-800">
                     <i class="fas fa-user-edit mr-2"></i> Mon Profil

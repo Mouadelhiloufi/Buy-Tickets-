@@ -1,3 +1,19 @@
+<?php
+session_start();
+if(isset($_SESSION['user_id'])){
+    if($_SESSION['user_role']=="organisateur"){
+        header("location: pages/organizer/stats.php");
+        exit();
+    }else if($_SESSION['user_role']=='admin'){
+        header("location: pages/admin/dashboard.php");
+        exit();
+    }else if($_SESSION['user_role']=='acheteur'){
+        header("location: index.php");
+    }
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -91,7 +107,7 @@
                             <p class="text-xs text-gray-400 font-bold uppercase tracking-tighter">À partir de</p>
                             <p class="text-2xl font-black text-green-700 uppercase tracking-tighter">50 DH</p>
                         </div>
-                        <a href="match_details.php" class="bg-gray-900 text-white px-6 py-2 rounded-lg font-bold text-sm hover:bg-black transition uppercase italic">Acheter</a>
+                        <a href="pages/match_details.php" class="bg-gray-900 text-white px-6 py-2 rounded-lg font-bold text-sm hover:bg-black transition uppercase italic">Acheter</a>
                     </div>
                 </div>
             </div>

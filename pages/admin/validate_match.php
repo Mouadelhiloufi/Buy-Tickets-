@@ -1,3 +1,49 @@
+<?php
+
+    require_once __DIR__ . "../../../classes/Admin.php";
+    require_once __DIR__ . "../../../classes/Organisateur.php";
+
+
+    $user=Organisateur::findById($_SESSION['user_id']);
+
+
+    $admin=new Admin($user['nom'],$user['prenom'],$user['email'],$user['phone']
+  ,$user['role'],$user['actif'],$user['pwd']);
+
+  $matches=$admin->show_match();
+  
+ 
+
+  if($_SERVER['REQUEST_METHOD']=="POST"){
+
+    $organisateur_id=$_POST['organisateur_id'];
+    $event_id=$_POST['event_id'];
+
+
+    if($_POST['action']=="valide"){
+        $admin->valid_match($organisateur_id,$event_id);
+        header("location: " .$_SERVER['PHP_SELF']);
+        exit();
+    }else{
+        $admin->refuse_match($organisateur_id,$event_id);
+        header("location: " .$_SERVER['PHP_SELF']);
+        exit();
+    }
+  }
+
+
+  
+
+
+
+
+
+?>
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -34,59 +80,41 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    
+                    <?php foreach($matches as $match): ?>
+                        <form action="" method="POST">
+                <input type="hidden" name="organisateur_id" value="<?= $match['organisateur_id'] ?>">
+                <input type="hidden" name="event_id" value="<?= $match['id'] ?>">
                     <tr class="hover:bg-gray-50 transition">
                         <td class="p-5">
                             <div class="flex items-center gap-3">
                                 <span class="text-2xl">⚽</span>
                                 <div>
-                                    <p class="font-black text-gray-800 uppercase">Raja CA vs Wydad AC</p>
-                                    <p class="text-xs text-green-600 font-bold italic">Catégories: VIP, Zone A, Zone B</p>
+                                    <p class="font-black text-gray-800 uppercase"><?= $match['equipe1'] ."vs". $match['equipe2'] ?></p>
+                                    
                                 </div>
                             </div>
                         </td>
-                        <td class="p-5 text-gray-600 font-medium italic text-sm">Organisateur #42 (Med Events)</td>
+                        <td class="p-5 text-gray-600 font-medium italic text-sm"><?= $match['nom'] . " ".$match['prenom'] ?></td>
                         <td class="p-5 text-center">
-                            <p class="text-sm font-bold">25/06/2025 - 20:00</p>
-                            <p class="text-xs text-gray-400">Stade Mohamed V</p>
+                            <p class="text-sm font-bold"><?= $match['date_match'] ."  - ".$match['heure_match'] ?> </p>
+                            <p class="text-xs text-gray-400"><?= $match['lieu'] ?></p>
                         </td>
                         <td class="p-5 text-center">
-                            <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-[10px] font-black uppercase tracking-widest border border-yellow-200">En attente</span>
+                            <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-[10px] font-black uppercase tracking-widest border border-yellow-200"><?= $match['statut'] ?></span>
                         </td>
                         <td class="p-5 text-right">
                             <div class="flex justify-end gap-2">
-                                <button onclick="confirmAction('valider')" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-xs font-bold uppercase transition shadow-md">
-                                    Valider
-                                </button>
-                                <button onclick="confirmAction('refuser')" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl text-xs font-bold uppercase transition shadow-md">
-                                    Refuser
-                                </button>
+                               <button type="submit" name="action" value="valide"
+                             class="bg-green-600 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-tighter">Accepter</button>
+                            <button type="submit" name="action" value="refuse"
+                             class="bg-red-600 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-tighter">Refuser</button>
                             </div>
                         </td>
                     </tr>
+                    </form>
+                <?php endforeach;?>
 
-                    <tr class="hover:bg-gray-50 transition opacity-75 bg-gray-50/50">
-                        <td class="p-5">
-                            <div class="flex items-center gap-3">
-                                <span class="text-2xl">⚽</span>
-                                <div>
-                                    <p class="font-black text-gray-800 uppercase">Maroc vs Brésil</p>
-                                    <p class="text-xs text-gray-400 italic">Match Amical International</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="p-5 text-gray-600 font-medium italic text-sm">Fédération Royale</td>
-                        <td class="p-5 text-center">
-                            <p class="text-sm font-bold">12/08/2025 - 21:00</p>
-                            <p class="text-xs text-gray-400">Stade de Tanger</p>
-                        </td>
-                        <td class="p-5 text-center">
-                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-black uppercase tracking-widest border border-green-200">Publié</span>
-                        </td>
-                        <td class="p-5 text-right">
-                            <span class="text-gray-400 italic text-xs">Aucune action requise</span>
-                        </td>
-                    </tr>
+                    
 
                 </tbody>
             </table>

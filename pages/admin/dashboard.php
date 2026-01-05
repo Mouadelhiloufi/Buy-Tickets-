@@ -1,3 +1,30 @@
+<?php
+
+    require_once __DIR__ . "../../../classes/Admin.php";
+    require_once __DIR__ . "../../../classes/Organisateur.php";
+
+
+    $user=Organisateur::findById($_SESSION['user_id']);
+
+
+    $admin=new Admin($user['nom'],$user['prenom'],$user['email'],$user['phone']
+  ,$user['role'],$user['actif'],$user['pwd']);
+
+  $matches=$admin->show_match();
+ 
+
+  
+
+
+  
+
+
+
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -10,9 +37,13 @@
         <div class="text-2xl font-black mb-10 italic underline decoration-green-500">ADMIN PANEL</div>
         <nav class="space-y-4">
             <a href="#" class="block text-green-400 font-bold">📊 Statistiques Globales</a>
-            <a href="#" class="block hover:text-green-400">⚖️ Valider Matchs</a>
-            <a href="#" class="block hover:text-green-400">👥 Utilisateurs</a>
-            <a href="#" class="block hover:text-green-400">💬 Commentaires</a>
+            <a href="validate_match.php" class="block hover:text-green-400">⚖️ Valider Matchs</a>
+            <a href="gerer_users.php" class="block hover:text-green-400">👥 Utilisateurs</a>
+            <a href="commentaire.php" class="block hover:text-green-400">💬 Commentaires</a>
+            <a href="../../auth/logout.php" class="flex items-center gap-3 py-2.5 px-4 rounded transition hover:bg-red-600 text-green-300 hover:text-white font-bold uppercase text-xs tracking-widest">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Se déconnecter
+                </a>
         </nav>
     </aside>
 
@@ -38,27 +69,30 @@
             </div>
         </div>
 
+        <?php foreach($matches as $match): ?>
+            
         <div class="bg-white rounded-3xl shadow-lg overflow-hidden">
             <table class="w-full text-left border-collapse">
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="p-4 border-b">Match Demandé</th>
                         <th class="p-4 border-b">Organisateur</th>
-                        <th class="p-4 border-b">Actions</th>
+                        <th class="p-4 border-b">Statut</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="p-4 border-b font-bold italic">Real Madrid vs Barça (Amical)</td>
-                        <td class="p-4 border-b italic">EventPRO Maroc</td>
+                        <td class="p-4 border-b font-bold italic"><?= $match['equipe1'] ."vs". $match['equipe2'] ?></td>
+                        <td class="p-4 border-b italic"><?= $match['nom'] . " ".$match['prenom'] ?></td>
                         <td class="p-4 border-b flex gap-2">
-                            <button class="bg-green-600 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-tighter">Accepter</button>
-                            <button class="bg-red-600 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-tighter">Refuser</button>
+                            <?= $match['statut']?>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        <?php endforeach; ?>
+        
     </main>
 </body>
 </html>

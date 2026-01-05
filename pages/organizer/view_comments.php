@@ -1,3 +1,10 @@
+<?php
+    require_once __DIR__ ."/../../classes/Organisateur.php";
+    $comments=Organisateur::consult_comments($_SESSION['user_id']);
+    // var_dump($comments);
+?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -58,7 +65,8 @@
             </header>
 
             <div class="space-y-6">
-                
+
+                <?php foreach($comments as $comment):?>
                 <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-md transition-all group">
                     <div class="flex flex-wrap justify-between items-start gap-4 mb-6">
                         <div class="flex items-center gap-4">
@@ -66,10 +74,10 @@
                                 AS
                             </div>
                             <div>
-                                <h4 class="font-black text-gray-800 uppercase tracking-tight">Ahmed Souiri</h4>
+                                <h4 class="font-black text-gray-800 uppercase tracking-tight"><?= $comment['nom'] . $comment['prenom']?>?></h4>
                                 <div class="flex items-center gap-2">
                                     <span class="text-[10px] font-black text-green-600 bg-green-50 px-2 py-0.5 rounded uppercase tracking-widest border border-green-100 italic">Vérifié</span>
-                                    <span class="text-[10px] text-gray-400 font-bold italic">Il y a 2 jours</span>
+                                    <span class="text-[10px] text-gray-400 font-bold italic"><?= $comment['date_commentaire'] ?>?></span>
                                 </div>
                             </div>
                         </div>
@@ -81,7 +89,7 @@
                     <div class="relative bg-gray-50 p-5 rounded-2xl mb-4">
                         <i class="fas fa-quote-left absolute -top-2 -left-2 text-gray-200 text-2xl"></i>
                         <p class="text-gray-600 italic text-sm leading-relaxed">
-                            L'organisation était parfaite ! L'entrée au stade s'est faite sans attente grâce au système de QR Code. Hâte de revenir pour le prochain match.
+                            <?= $comment['contenu'] ?>
                         </p>
                     </div>
 
@@ -91,7 +99,7 @@
                                 <i class="fas fa-futbol text-[10px] text-gray-400"></i>
                             </div>
                             <span class="text-[10px] font-black uppercase text-gray-400 tracking-tighter">
-                                Match : <span class="text-gray-800 font-black">Raja Casablanca vs WAC</span>
+                                Match : <span class="text-gray-800 font-black"><?= $comment['equipe1']."vs".$comment['equipe2'] ?></span>
                             </span>
                         </div>
                         <button class="text-[10px] font-black uppercase text-red-500 hover:text-red-700 transition">
@@ -99,6 +107,7 @@
                         </button>
                     </div>
                 </div>
+                <?php endforeach;?>
 
                 <!-- <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-md transition-all group">
                     <div class="flex flex-wrap justify-between items-start gap-4 mb-6">
