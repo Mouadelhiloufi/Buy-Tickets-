@@ -2,13 +2,16 @@
     
     require_once __DIR__ . '/../../classes/Organisateur.php';
     
-    // Récupération des statistiques réelles
-    $stats = Organisateur::Consult_statistique($_SESSION['user_id']);
     
-    // On extrait pour plus de lisibilité (basé sur ta fonction Consult_statistique)
-    $totalBillets = $stats['total_billets'] ;
-    $totalEvents  = $stats['total_events'];
-    $topMatch     = $stats['max_vendu'] ;
+    $organisateur = new Organisateur($_SESSION['user_id'],);
+    $stats=$organisateur->Consult_statistique();
+    
+
+    $totalBillets = $stats['total_billets'];
+    $totalEvents = $stats['total_events'];
+    $topMatch= $stats['max_vendu'];
+
+    
 ?>
 
 <!DOCTYPE html>

@@ -7,8 +7,7 @@
     $user=Organisateur::findById($_SESSION['user_id']);
 
 
-    $admin=new Admin($user['nom'],$user['prenom'],$user['email'],$user['phone']
-  ,$user['role'],$user['actif'],$user['pwd']);
+    $admin=new Admin($_SESSION['user_id']);
 
   $matches=$admin->show_match();
   

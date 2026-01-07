@@ -1,7 +1,7 @@
 <?php
 
     require_once __DIR__ . '/../../classes/Organisateur.php';
-    $user=Organisateur::get_profile($_SESSION['user_id']);
+    $user=new Organisateur($_SESSION['user_id']);
 
     if($_SERVER['REQUEST_METHOD']=="POST"){
         $nom=$_POST['nom'];
@@ -9,7 +9,7 @@
         $email=$_POST['email'];
         $phone=$_POST['phone'];
 
-        $update=Organisateur::update_profile($nom,$prenom,$email,$phone,$_SESSION['user_id']);
+        $update=$user->update_profile($nom,$prenom,$email,$phone);
         header("location: ". $_SERVER['PHP_SELF']);
     }
 
@@ -63,22 +63,22 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                         <div class="space-y-2">
                             <label class="text-[10px] font-black uppercase text-gray-400 ml-1">Nom de famille</label>
-                            <input type="text" name="nom" value="<?php echo $user['nom']; ?>" placeholder="Ex: El Amrani" 
+                            <input type="text" name="nom" value="<?php echo $user->get("nom") ?>" placeholder="Ex: El Amrani" 
                                    class="w-full bg-gray-50 border-2 border-gray-100 p-4 rounded-2xl focus:border-green-600 outline-none transition font-bold text-gray-700">
                         </div>
                         <div class="space-y-2">
                             <label class="text-[10px] font-black uppercase text-gray-400 ml-1">Prénom</label>
-                            <input type="text" name="prenom" value="<?php echo $user['prenom']; ?>" placeholder="Ex: Yassine" 
+                            <input type="text" name="prenom" value="<?php echo $user->get("prenom") ?>" placeholder="Ex: Yassine" 
                                    class="w-full bg-gray-50 border-2 border-gray-100 p-4 rounded-2xl focus:border-green-600 outline-none transition font-bold text-gray-700">
                         </div>
                         <div class="space-y-2 md:col-span-2">
                             <label class="text-[10px] font-black uppercase text-gray-400 ml-1">Adresse Email Professionnelle</label>
-                            <input type="email" value="<?php echo $user['email']; ?>" name="email" placeholder="organisateur@footpass.ma" 
+                            <input type="email" value="<?php echo $user->get("email") ?>" name="email" placeholder="organisateur@footpass.ma" 
                                    class="w-full bg-gray-50 border-2 border-gray-100 p-4 rounded-2xl focus:border-green-600 outline-none transition font-bold text-gray-700">
                         </div>
                         <div class="space-y-2 md:col-span-2">
                             <label class="text-[10px] font-black uppercase text-gray-400 ml-1">Numéro de Téléphone</label>
-                            <input type="tel" name="phone" value="<?php echo $user['phone']; ?>" placeholder="+212 600 000 000" 
+                            <input type="tel" name="phone" value="<?php echo $user->get("phone")?>" placeholder="+212 600 000 000" 
                                    class="w-full bg-gray-50 border-2 border-gray-100 p-4 rounded-2xl focus:border-green-600 outline-none transition font-bold text-gray-700">
                         </div>
                     </div>

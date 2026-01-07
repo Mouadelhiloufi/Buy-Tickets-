@@ -5,24 +5,26 @@
     session_start();
 
     abstract class User{
-        protected $nom;
-        protected $prenom;
-        protected $email;
-        protected $phone;
-        protected $role;
-        protected $actif;
-        protected $pwd;
+        protected $data;
+        
 
-        public function __construct($nom,$prenom,$email,$phone,$role,$actif,$pwd)
+        public function __construct($id)
         {
-            $this->nom=$nom;
-            $this->prenom=$prenom;
-            $this->email=$email;
-            $this->phone=$phone;
-            $this->role=$role;
-            $this->actif=$actif;
-            $this->pwd=$pwd;
+            $sql_pre="SELECT * from users where id=?";
+            $db=Database::getInstance()->getConnection();
+            $sql=$db->prepare($sql_pre);
+            $sql->execute([
+                $id
+            ]);
+            $this->data=$sql->fetch(PDO::FETCH_ASSOC);
+             
         }
+
+        public function get($key){
+            return $this->data[$key];
+        }
+
+
 
 
 
@@ -80,15 +82,24 @@
             }
 
 
-
-
             }
 
            
-            
-
-
             }
+
+
+            static function findById($id){
+            $db=Database::getInstance()->getConnection();
+            $sql_prepare="SELECT * from users where id=?";
+            $sql=$db->prepare($sql_prepare);
+            $sql->execute([
+                $id
+            ]);
+            $result=$sql->fetch(PDO::FETCH_ASSOC);
+
+            return $result;
+        }
+
 
     }
 

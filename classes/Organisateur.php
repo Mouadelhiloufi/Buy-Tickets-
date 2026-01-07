@@ -1,6 +1,6 @@
 <?php
 
-// require_once __DIR__ . "/User.php";
+    // require_once __DIR__ . "/User.php";
     require_once __DIR__ . '/User.php';
     require_once __DIR__ . '/Profile.php';
 
@@ -9,95 +9,52 @@
         
         
 
-        function __construct($nom, $prenom, $email, $phone, $role, $actif, $pwd){
-            parent::__construct($nom, $prenom, $email, $phone, $role, $actif, $pwd);
+        function __construct($id){
+            parent::__construct($id);
 
         }
-        function cree_event($equipe1,$equipe2,$date_match,$heure_match,$lieu
-                            ,$duree,$nb_places,$statut,$organisateur_id,
-                            $type_V,$prix_V,$nb_place_V,$type,$prix,$nb_place_N){
-                              try{
-                                $db=Database::getInstance()->getConnection();
-                                $db->beginTransaction();
-            
-                $sql_prepare="INSERT into events(equipe1,equipe2,date_match,heure_match,lieu,
-                duree,nb_places,statut,organisateur_id)values(?,?,?,?,?,?,?,?,?)";
+
+
+
+        public function update_profile($nom,$prenom,$email,$phone){
+                $db=Database::getInstance()->getConnection();
+                $sql_prepare="UPDATE users set nom=?,prenom=?,email=?,phone=? where id=?";
                 $sql=$db->prepare($sql_prepare);
                 $sql->execute([
-                    $equipe1,
-                    $equipe2,
-                    $date_match,
-                    $heure_match,
-                    $lieu,
-                    $duree,
-                    $nb_places,
-                    $statut,
-                    $organisateur_id
+                    $nom,
+                    $prenom,
+                    $email,
+                    $phone,
+                    $this->data['id']
                 ]);
-
-                $match_id=$db->lastInsertId();
-
-                $sql_pre="INSERT into categories(type,prix,match_id,nb_places_restantes)values(?,?,?,?)";
-                $sql=$db->prepare($sql_pre);
-                $sql->execute([
-                    $type_V,
-                    $prix_V,
-                    $match_id,
-                    $nb_place_V
-                ]);
-
-                $sql_pr="INSERT into categories(type,prix,match_id,nb_places_restantes)values(?,?,?,?)";
-                $sql=$db->prepare($sql_pr);
-                $sql->execute([
-                    $type,
-                    $prix,
-                    $match_id,
-                    $nb_place_N
-                ]);
-
-                $db->commit();
-                
-                }catch(Exception $e){
-                    $db->rollBack();
-                    var_dump($e->getMessage());
-                    
-                }
+            }
 
 
-        }
 
 
-        static function findById($id){
-            $db=Database::getInstance()->getConnection();
-            $sql_prepare="SELECT * from users where id=?";
-            $sql=$db->prepare($sql_prepare);
-            $sql->execute([
-                $id
-            ]);
-            $result=$sql->fetch(PDO::FETCH_ASSOC);
-
-            return $result;
-
-        }
+        
 
 
-        static function Consult_statistique($id){
+        
+
+
+         function Consult_statistique(){
             $db=Database::getInstance()->getConnection();
             $sql_prepare="select count(B.id) as total_billets from users U inner join events 
             E on E.organisateur_id=U.id inner join billets B on B.match_id=E.id where U.id = ?";
             $sql=$db->prepare($sql_prepare);
             $sql->execute([
-                $id
+                $this->data['id']
             ]);
 
             $res=$sql->fetch(PDO::FETCH_ASSOC);
             $total_billets=$res['total_billets'];       
              
 
-            $sql_pre="select count(id) as total_events from events where organisateur_id=? and statut='valide'";
+            $sql_pre="SELECT count(id) as total_events from events where organisateur_id=? and statut='valide'";
             $sql=$db->prepare($sql_pre);
             $sql->execute([
-                $id
+                $this->data['id']
             ]);
 
             $res=$sql->fetch(PDO::FETCH_ASSOC);
@@ -113,12 +70,12 @@
                         COUNT(b.id) AS total_reservations
                         FROM events e
                         inner JOIN billets b on b.match_id = e.id
+                        where organisateur_id=?
                         GROUP BY e.id
                         ORDER BY total_reservations DESC
                         LIMIT 1;";
             $sql=$db->prepare($sql_prep);
-            $sql->execute();
-
+            $sql->execute([$this->data['id']]);
             $max_vendu=$sql->fetch(PDO::FETCH_ASSOC);
 
 
@@ -129,41 +86,21 @@
             'total_events'=>$total_events,
             'max_vendu'=>$max_vendu
             ];
-
-
             
         }
 
+             
 
-        static function get_profile($id){
-            return self::findById($id);
-            }
-
-            static function update_profile($nom,$prenom,$email,$phone,$id){
-                $db=Database::getInstance()->getConnection();
-                $sql_prepare="UPDATE users set nom=?,prenom=?,email=?,phone=? where id=?";
-                $sql=$db->prepare($sql_prepare);
-                $sql->execute([
-                    $nom,
-                    $prenom,
-                    $email,
-                    $phone,
-                    $id
-                ]);
-            }
-
-
-
-            static function consult_comments($id){
+            public function consult_comments(){
                 $db=Database::getInstance()->getConnection();
 
-                $sql_prepare="select U.nom,U.prenom,E.equipe1,E.equipe2,C.contenu,C.note,C.date_commentaire
+                $sql_prepare="SELECT U.nom,U.prenom,E.equipe1,E.equipe2,C.contenu,C.note,C.date_commentaire
                 from users U inner join commentaires C on C.acheteur_id=U.id 
                 inner join events E on E.id=C.match_id where E.organisateur_id=?";
 
                 $sql=$db->prepare($sql_prepare);
                 $sql->execute([
-                    $id
+                    $this->data['id']
                 ]);
                 return $sql->fetchAll(PDO::FETCH_ASSOC);
             }

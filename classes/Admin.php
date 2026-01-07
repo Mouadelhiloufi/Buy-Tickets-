@@ -7,8 +7,8 @@
 
     class Admin extends User{
 
-        function __construct($nom, $prenom, $email, $phone, $role, $actif, $pwd){
-            parent::__construct($nom, $prenom, $email, $phone, $role, $actif, $pwd);
+        function __construct($id){
+            parent::__construct($id);
 
         }
 
@@ -25,28 +25,9 @@
         }
 
 
-        function valid_match($organisateur_id,$event_id){
-            $db=Database::getInstance()->getConnection();
-            $sql_prepare="UPDATE events E inner join users U on E.organisateur_id=U.id 
-            set E.statut='valide' where U.id=? and E.id=?";
-            $sql=$db->prepare($sql_prepare);
-            $sql->execute([
-                $organisateur_id,
-                $event_id
-            ]);
+        
 
-        }
-
-        function refuse_match($organisateur_id,$event_id){
-            $db=Database::getInstance()->getConnection();
-            $sql_prepare="UPDATE events E inner join users U on E.organisateur_id=U.id 
-            set E.statut='refuse' where U.id=? and E.id=?";
-            $sql=$db->prepare($sql_prepare);
-            $sql->execute([
-                $organisateur_id,
-                $event_id
-            ]);
-        }
+        
 
         static function acceder_comments(){
             $db=Database::getInstance()->getConnection();
@@ -79,6 +60,30 @@
             $sql_prepare="UPDATE users set actif=0 where id=?";
             $sql=$db->prepare($sql_prepare);
             $sql->execute([$id]);
+        }
+
+        function valid_match($organisateur_id,$event_id){
+            $db=Database::getInstance()->getConnection();
+            $sql_prepare="UPDATE events E inner join users U on E.organisateur_id=U.id 
+            set E.statut='valide' where U.id=? and E.id=?";
+            $sql=$db->prepare($sql_prepare);
+            $sql->execute([
+                $organisateur_id,
+                $event_id
+            ]);
+
+        }
+
+
+        function refuse_match($organisateur_id,$event_id){
+            $db=Database::getInstance()->getConnection();
+            $sql_prepare="UPDATE events E inner join users U on E.organisateur_id=U.id 
+            set E.statut='refuse' where U.id=? and E.id=?";
+            $sql=$db->prepare($sql_prepare);
+            $sql->execute([
+                $organisateur_id,
+                $event_id
+            ]);
         }
 
     }

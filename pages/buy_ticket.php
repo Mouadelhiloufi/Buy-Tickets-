@@ -20,7 +20,15 @@
             </div>
         </div>
 
-        <a href="profile.php" class="inline-block text-green-700 font-bold hover:underline italic">Consulter mon historique →</a>
+        <div class="flex flex-col gap-4">
+            <a href="home.php" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 transition shadow-md">
+                Retour à l'accueil
+            </a>
+
+            <a href="profile.php" class="text-green-700 font-bold hover:underline italic text-sm">
+                Consulter mon historique →
+            </a>
+        </div>
     </div>
 </body>
 </html>

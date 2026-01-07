@@ -4,11 +4,10 @@
     require_once __DIR__ . "../../../classes/Organisateur.php";
 
 
-    $user=Organisateur::findById($_SESSION['user_id']);
+   
 
 
-    $admin=new Admin($user['nom'],$user['prenom'],$user['email'],$user['phone']
-  ,$user['role'],$user['actif'],$user['pwd']);
+    $admin=new Admin($_SESSION['user_id']);
 
   $matches=$admin->show_match();
  
@@ -69,7 +68,7 @@
             </div>
         </div>
 
-        <?php foreach($matches as $match): ?>
+        
             
         <div class="bg-white rounded-3xl shadow-lg overflow-hidden">
             <table class="w-full text-left border-collapse">
@@ -81,6 +80,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <?php foreach($matches as $match): ?>
                     <tr>
                         <td class="p-4 border-b font-bold italic"><?= $match['equipe1'] ."vs". $match['equipe2'] ?></td>
                         <td class="p-4 border-b italic"><?= $match['nom'] . " ".$match['prenom'] ?></td>
@@ -88,10 +88,11 @@
                             <?= $match['statut']?>
                         </td>
                     </tr>
+                     <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
-        <?php endforeach; ?>
+       
         
     </main>
 </body>

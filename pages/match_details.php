@@ -1,22 +1,30 @@
 <?php
 
 require_once __DIR__."../../classes/Acheteur.php";
+require_once __DIR__."../../classes/Event.php";
+require_once __DIR__."../../classes/Billets.php";
 if(!isset($_SESSION['user_id'])){
     
         header("location: ../auth/login.php");
         exit();
 }
     $match_id=$_GET['id'];
-    $match_details=Acheteur::show_match_details($match_id);
-    var_dump($match_details);
+    $match_details=Event::show_match_details($match_id);
+
 
     if($_SERVER['REQUEST_METHOD']=="POST"){
         
         $acheteur_id=$_SESSION['user_id'];
         $match_id=$_POST['match_id'];
         $category_id=$_POST['category_id'];
-        $numero_place=$_POST['nb_places'];
+        $numero_place=$_POST['nb_place'];
         $prix=$_POST['prix'];
+
+        Billet::acheter_billet($acheteur_id,$match_id,$category_id,$numero_place,$prix);
+        header("location: buy_ticket.php");
+        exit();
+
+
 
     }
 
@@ -53,17 +61,33 @@ if(!isset($_SESSION['user_id'])){
 
                 <div class="bg-gray-100 p-8 rounded-2xl">
                     <h3 class="text-xl font-bold mb-4 italic text-green-800 underline">Acheter vos billets</h3>
-                    <form action="buy_ticket.php" class="space-y-4">
-                        <input type="hidden" name="match_id" value="<?php echo $match_details[0]['match_id']?>">
-                        <input type="hidden" name="category_id" value="<?php echo $match_details[0]['category_id']?>">
-                        <select id="select" name class="w-full p-3 rounded-lg border">
-                            <option name="prix">Catégories</option>
-                            <option data-nb_places="<?php echo $match_details[0]['nb_places_restantes']?>" value="<?php echo $match_details[0]['prix']?>">Catégorie <?php echo $match_details[0]['type']." ". $match_details[0]['prix']." DH" ?></option>
-                            <option data-nb_places="<?php echo $match_details[1]['nb_places_restantes']?>" value="<?php echo $match_details[1]['prix']?>" >Catégorie <?php echo $match_details[1]['type']." ". $match_details[1]['prix']." DH" ?></option>
-                        </select>
-                        <input name="nb_places" type="number" max="4" min="1" placeholder="Nombre de places" class="w-full p-3 rounded-lg border">
-                        <button class="w-full bg-green-700 text-white py-4 rounded-xl font-bold text-lg hover:bg-green-600 shadow-lg">Confirmer l'achat</button>
-                    </form>
+                    <form method="POST" class="space-y-4">
+    <input type="hidden" name="match_id" value="<?php echo $match_details[0]['match_id']?>">
+    
+    <select id="select" name="category_id" class="w-full p-3 rounded-lg border" required>
+        <option value="">Sélectionnez une catégorie</option>
+        
+        <option data-prix="<?php echo $match_details[0]['prix']?>" 
+                data-nb_places="<?php echo $match_details[0]['nb_places_restantes']?>" 
+                value="<?php echo $match_details[0]['category_id']?>">
+            Catégorie <?php echo $match_details[0]['type']." - ". $match_details[0]['prix']." DH" ?>
+        </option>
+
+        <option data-prix="<?php echo $match_details[1]['prix']?>" 
+                data-nb_places="<?php echo $match_details[1]['nb_places_restantes']?>" 
+                value="<?php echo $match_details[1]['category_id']?>">
+            Catégorie <?php echo $match_details[1]['type']." - ". $match_details[1]['prix']." DH" ?>
+        </option>
+    </select>
+
+    <input type="hidden" name="prix" id="input_prix" value="">
+    
+    <input name="nb_place" type="number" placeholder="Numéro de place" class="w-full p-3 rounded-lg border" required>
+    
+    <button class="w-full bg-green-700 text-white py-4 rounded-xl font-bold text-lg hover:bg-green-600 shadow-lg">
+        Confirmer l'achat
+    </button>
+</form>
                 </div>
             </div>
         </div>
@@ -76,19 +100,17 @@ if(!isset($_SESSION['user_id'])){
 <script>
     const select = document.getElementById('select');
     const places = document.getElementById('places_restant');
+    const inputPrix = document.getElementById('input_prix');
 
     select.addEventListener("change", function(e) {
-        // 1. Kankhdo l'option li khtarha l'user
         const selectedOption = this.options[this.selectedIndex];
-
-        // 2. Kan-jbdou l'valeur dial "data-nb_places"
+        
+        // Update places
         const nbPlaces = selectedOption.getAttribute('data-nb_places');
+        places.textContent = nbPlaces || "0";
 
-        // 3. Kan-affichiwha f l'id "places_restant"
-        if (nbPlaces !== null) {
-            places.textContent = nbPlaces;
-        } else {
-            places.textContent = "0"; // Ila khtar "Catégories" (l'option loula)
-        }
+        // Update prix hidden input
+        const prix = selectedOption.getAttribute('data-prix');
+        inputPrix.value = prix || "";
     });
 </script>

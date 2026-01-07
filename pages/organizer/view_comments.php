@@ -1,6 +1,7 @@
 <?php
     require_once __DIR__ ."/../../classes/Organisateur.php";
-    $comments=Organisateur::consult_comments($_SESSION['user_id']);
+    $organisateur=new Organisateur($_SESSION['user_id']);
+    $comments=$organisateur->consult_comments()
     // var_dump($comments);
 ?>
 

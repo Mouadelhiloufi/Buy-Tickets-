@@ -1,11 +1,11 @@
 <?php
     
   require_once __DIR__ . '/../../classes/Organisateur.php';
+  require_once __DIR__ . '../../../classes/Event.php';
 
 
-  $user=Organisateur::findById($_SESSION['user_id']);
-  $organizer=new Organisateur($user['nom'],$user['prenom'],$user['email'],$user['phone']
-  ,$user['role'],$user['actif'],$user['pwd']);
+  
+  
 
   
 
@@ -31,7 +31,7 @@
     $type_V="vip";
     $type="normal";
 
-    $organizer->cree_event($equipe1,$equipe2,$date_match,$heure_match,$lieu,$duree,
+    Event::cree_event($equipe1,$equipe2,$date_match,$heure_match,$lieu,$duree,
     $nb_places,$statut,$organisateur_id,$type_V,$prix_V,$nb_place_V,$type,$prix,$nb_place_N);
   }
 
