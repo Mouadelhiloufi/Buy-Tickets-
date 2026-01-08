@@ -1,0 +1,4 @@
+RewriteEngine On
+
+
+ErrorDocument 404 /projet_buy_tickets/404.php

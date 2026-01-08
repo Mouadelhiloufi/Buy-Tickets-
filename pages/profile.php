@@ -17,7 +17,7 @@
     <div class="max-w-6xl mx-auto p-6 flex flex-col md:flex-row gap-8">
         <div class="w-full md:w-1/3 bg-white p-8 rounded-3xl shadow-lg h-fit">
     <div class="w-24 h-24 bg-green-100 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl">👤</div>
-    <h2 class="text-center font-bold text-xl">Ahmed Alami</h2>
+    <h2 class="text-center font-bold text-xl"><?php echo $_SESSION['user_nom']. " ". $_SESSION['user_prenom'] ?></h2>
     <p class="text-center text-gray-500 mb-6 italic">Supporteur Passionné</p>
     
     <nav class="space-y-2">

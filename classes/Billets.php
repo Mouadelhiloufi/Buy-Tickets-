@@ -1,5 +1,15 @@
 <?php
     require_once __DIR__."../../config/database.php";
+
+    use Dompdf\Dompdf;
+use Dompdf\Options;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+
+
     class Billet{
         private $id;
         private $acheteur_id;
@@ -88,40 +98,68 @@
             return $sql->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        static function envoyerBillet($equipe1,$equipe2,$nom,$prenom,$numero_place,$prix,$billet_id){
-            $html = "
-<style>
-    .ticket { border: 3px solid #15803d; border-radius: 15px; width: 500px; margin: auto; padding: 20px; font-family: sans-serif; }
-    .header { text-align: center; border-bottom: 2px dashed #ddd; padding-bottom: 15px; }
-    .match { font-size: 24px; font-weight: bold; color: #15803d; margin: 20px 0; text-align: center; }
-    .details { display: flex; justify-content: space-between; margin-bottom: 10px; }
-    .footer { font-size: 10px; color: #666; text-align: center; margin-top: 20px; }
-</style>
+       
 
-<div class='ticket'>
-    <div class='header'>
-        <h1>FOOTPASS</h1>
-        <p>Billet de Match Officiel</p>
-    </div>
-    
-    <div class='match'>{$equipe1} VS {$equipe2}</div>
-    
-    <div class='details'>
-        <p><strong>Supporteur:</strong> {$nom} {$prenom}</p>
-        <p><strong>Place:</strong> N° {$numero_place}</p>
-        <p><strong>Prix:</strong> {$prix} DH</p>
-    </div>
 
-    <div style='text-align: center; margin-top: 15px;'>
-        <img src='https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=TICKET-{$billet_id}' />
-    </div>
 
-    <div class='footer italic'>
-        Ce billet est personnel et non transmissible. Merci de le présenter à l'entrée.
-    </div>
-</div>
-";
-        }
+        static function genererEtEnvoyerBillet($billet_id, $user_email, $user_nom, $user_prenom, $equipe1, $equipe2) {
+    // --- 1. CONFIGURATION DOMPDF ---
+    $options = new \Dompdf\Options();
+    $options->set('isRemoteEnabled', true); // Bach i-ban l-QR Code mn l-internet
+    $dompdf = new \Dompdf\Dompdf($options);
+
+    // --- 2. DESIGN DIAL L-BILLET (HTML) ---
+    $html = "
+    <div style='border: 4px solid #15803d; padding: 30px; font-family: sans-serif; width: 500px; margin: auto; border-radius: 20px;'>
+        <h1 style='text-align: center; color: #15803d;'>FOOTPASS - BILLET</h1>
+        <hr>
+        <div style='margin: 20px 0;'>
+            <h2 style='text-align: center;'>$equipe1 VS $equipe2</h2>
+            <p><strong>Supporteur:</strong> $user_nom $user_prenom</p>
+            <p><strong>Billet N°:</strong> #$billet_id</p>
+        </div>
+        <div style='text-align: center;'>
+            <img src='https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=VALID-TICKET-$billet_id' width='120'>
+        </div>
+        <p style='font-size: 10px; color: #666; text-align: center; margin-top: 20px;'>
+            Veuillez présenter ce billet à l'entrée du stade.
+        </p>
+    </div>";
+
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->render();
+    $pdf_content = $dompdf->output(); // Had $pdf_content hwa l-ficher PDF f la mémoire
+
+    // --- 3. ENVOI GMAIL (PHPMailer) ---
+    $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+
+    try {
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'houtm27@gmail.com'; 
+        $mail->Password   = 'ytoqpktwipwkesdy'; // Hadak l-code dial 16 hrf mn Google
+        $mail->SMTPSecure = 'ssl';
+        $mail->Port       = 465;
+        $mail->CharSet    = 'UTF-8';
+
+        $mail->setFrom('ael46041@gmail.com', 'FootPass Store');
+        $mail->addAddress($user_email);
+
+        $mail->isHTML(true);
+        $mail->Subject = "Votre billet pour $equipe1 vs $equipe2";
+        $mail->Body    = "Bonjour $user_prenom, merci pour votre achat ! Votre billet est en pièce jointe.";
+
+        // PIÈCE JOINTE : Hna fin kantsiftou l-PDF li t-ssweb
+        $mail->addStringAttachment($pdf_content, "Billet_Match_$billet_id.pdf");
+
+        $mail->send();
+        return true;
+    } catch (Exception $e) {
+        return "Erreur d'envoi: {$mail->ErrorInfo}";
+    }
+}
         
 
 

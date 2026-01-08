@@ -10,6 +10,7 @@ if(!isset($_SESSION['user_id'])){
 }
     $match_id=$_GET['id'];
     $match_details=Event::show_match_details($match_id);
+    
 
 
     if($_SERVER['REQUEST_METHOD']=="POST"){
@@ -21,6 +22,16 @@ if(!isset($_SESSION['user_id'])){
         $prix=$_POST['prix'];
 
         Billet::acheter_billet($acheteur_id,$match_id,$category_id,$numero_place,$prix);
+
+    Billet::genererEtEnvoyerBillet(
+    $billet_id, 
+    $_SESSION['user_email'], 
+    $_SESSION['user_nom'], 
+    $_SESSION['user_prenom'], 
+    $match_details[0]['equipe1'], 
+    $match_details[0]['equipe2']
+);
+
         header("location: buy_ticket.php");
         exit();
 
@@ -64,7 +75,7 @@ if(!isset($_SESSION['user_id'])){
                     <form method="POST" class="space-y-4">
     <input type="hidden" name="match_id" value="<?php echo $match_details[0]['match_id']?>">
     
-    <select id="select" name="category_id" class="w-full p-3 rounded-lg border" required>
+    <select id="select" name="category_id" class="w-full p-3 rounded-lg border focus:ring-2 focus:ring-green-500 outline-none" required>
         <option value="">Sélectionnez une catégorie</option>
         
         <option data-prix="<?php echo $match_details[0]['prix']?>" 
@@ -82,11 +93,17 @@ if(!isset($_SESSION['user_id'])){
 
     <input type="hidden" name="prix" id="input_prix" value="">
     
-    <input name="nb_place" type="number" placeholder="Numéro de place" class="w-full p-3 rounded-lg border" required>
+    <input name="nb_place" type="number" placeholder="Numéro de place" class="w-full p-3 rounded-lg border focus:ring-2 focus:ring-green-500 outline-none" required>
     
-    <button class="w-full bg-green-700 text-white py-4 rounded-xl font-bold text-lg hover:bg-green-600 shadow-lg">
-        Confirmer l'achat
-    </button>
+    <div class="flex flex-col gap-3">
+        <button type="submit" class="w-full bg-green-700 text-white py-4 rounded-xl font-bold text-lg hover:bg-green-800 shadow-lg transition-all active:scale-95">
+            Confirmer l'achat
+        </button>
+
+        <a href="matches.php" class="w-full text-center bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all">
+            Annuler et retourner
+        </a>
+    </div>
 </form>
                 </div>
             </div>

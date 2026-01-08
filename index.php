@@ -1,5 +1,9 @@
 <?php
-session_start();
+
+require_once __DIR__."/classes/Acheteur.php";
+
+$matches=Acheteur::consulte_matches();
+
 if(isset($_SESSION['user_id'])){
     if($_SESSION['user_role']=="organisateur"){
         header("location: pages/organizer/stats.php");
@@ -82,35 +86,36 @@ if(isset($_SESSION['user_id'])){
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            
+            <?php foreach($matches as $match):?>
             <div class="bg-white rounded-2xl overflow-hidden shadow-md border border-gray-100 card-hover transition duration-300">
                 <div class="bg-gray-100 p-8 flex justify-center items-center gap-6 relative">
-                    <span class="absolute top-4 left-4 bg-green-100 text-green-800 text-[10px] font-black px-2 py-1 rounded uppercase tracking-widest">En vente</span>
+                    
                     <div class="text-center">
                         <div class="w-16 h-16 bg-white rounded-full shadow-sm flex items-center justify-center text-2xl mb-2">🦁</div>
-                        <p class="font-bold text-sm uppercase">Equipe A</p>
+                        <p class="font-bold text-sm uppercase"><?= $match['equipe1'] ?></p>
                     </div>
                     <div class="text-xl font-black italic text-gray-300 uppercase">VS</div>
                     <div class="text-center">
                         <div class="w-16 h-16 bg-white rounded-full shadow-sm flex items-center justify-center text-2xl mb-2">🦅</div>
-                        <p class="font-bold text-sm uppercase">Equipe B</p>
+                        <p class="font-bold text-sm uppercase"><?= $match['equipe2'] ?></p>
                     </div>
                 </div>
                 <div class="p-6">
                     <div class="flex items-center gap-2 text-gray-500 text-xs mb-4">
-                        <i class="fas fa-calendar"></i> 20 Mai 2025
+                        <i class="fas fa-calendar"></i> <?= $match['date_match'] ?>
                         <span class="mx-2">•</span>
-                        <i class="fas fa-map-marker-alt"></i> Casablanca
+                        <i class="fas fa-map-marker-alt"></i> <?= $match['lieu'] ?>
                     </div>
                     <div class="flex justify-between items-end">
                         <div>
                             <p class="text-xs text-gray-400 font-bold uppercase tracking-tighter">À partir de</p>
-                            <p class="text-2xl font-black text-green-700 uppercase tracking-tighter">50 DH</p>
+                            <p class="text-2xl font-black text-green-700 uppercase tracking-tighter"><?= $match['prix']." DH" ?></p>
                         </div>
                         <a href="pages/match_details.php" class="bg-gray-900 text-white px-6 py-2 rounded-lg font-bold text-sm hover:bg-black transition uppercase italic">Acheter</a>
                     </div>
                 </div>
             </div>
+            <?php endforeach;?>
 
             </div>
     </main>

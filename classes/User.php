@@ -65,7 +65,11 @@
                 $_SESSION['user_id']=$user['id'];
                 $_SESSION['user_role']=$user['role'];
                 $_SESSION['user_nom']=$user['prenom'];
-                var_dump($user);
+                $_SESSION['user_prenom']=$user['nom'];
+                $_SESSION['user_email']=$user['email'];
+
+
+                
 
 
 
@@ -80,9 +84,12 @@
                 header("location: ../pages/admin/dashboard.php");
                 exit();
             }
+           
 
 
             }
+
+           
 
            
             }

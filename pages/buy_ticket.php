@@ -11,14 +11,7 @@
         <h1 class="text-2xl font-bold mb-2">Paiement Réussi !</h1>
         <p class="text-gray-600 mb-8">Votre billet a été généré avec succès. Vous allez le recevoir par email sous peu.</p>
         
-        <div class="border-2 border-dashed border-gray-300 p-4 rounded-xl mb-8 text-left bg-gray-50">
-            <p class="text-xs text-gray-400 uppercase font-bold">Billet Officiel #8829</p>
-            <p class="font-bold text-lg">MAROC vs BRESIL</p>
-            <p class="text-sm">Place : Rang B, Siège 42</p>
-            <div class="mt-4 flex justify-center">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=Ticket8829" alt="QR Code">
-            </div>
-        </div>
+       
 
         <div class="flex flex-col gap-4">
             <a href="home.php" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 transition shadow-md">
